@@ -1,5 +1,7 @@
+// eslint-disable-next-line no-undef
 const parentConfig = require('./karma.config')
 
+// eslint-disable-next-line no-undef
 module.exports = function(config) {
   parentConfig(config)
   config.set({

@@ -1,3 +1,5 @@
+/* eslint-env worker */
+/* globals mocha chai */
 importScripts('/base/node_modules/mocha/mocha.js')
 importScripts('/base/node_modules/chai/chai.js')
 
@@ -5,7 +7,7 @@ mocha.setup('tdd')
 self.assert = chai.assert
 
 importScripts('/base/node_modules/abortcontroller-polyfill/dist/abortcontroller-polyfill-only.js')
-importScripts('/base/dist/fetch.umd.js')
+importScripts('/base/fetch.js')
 importScripts('/base/test/test.js')
 
 function title(test) {

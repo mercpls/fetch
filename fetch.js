@@ -23,7 +23,7 @@ var support = {
 }
 
 function isDataView(obj) {
-  return obj && DataView.prototype.isPrototypeOf(obj)
+  return obj && Object.prototype.isPrototypeOf.call(DataView, obj)
 }
 
 if (support.arrayBuffer) {
@@ -81,7 +81,8 @@ function iteratorFor(items) {
   return iterator
 }
 
-export function Headers(headers) {
+// eslint-disable-next-line no-redeclare
+function Headers(headers) {
   this.map = {}
 
   if (headers instanceof Headers) {
@@ -116,7 +117,7 @@ Headers.prototype.get = function(name) {
 }
 
 Headers.prototype.has = function(name) {
-  return this.map.hasOwnProperty(normalizeName(name))
+  return Object.prototype.hasOwnProperty.call(this.map, normalizeName(name))
 }
 
 Headers.prototype.set = function(name, value) {
@@ -125,7 +126,7 @@ Headers.prototype.set = function(name, value) {
 
 Headers.prototype.forEach = function(callback, thisArg) {
   for (var name in this.map) {
-    if (this.map.hasOwnProperty(name)) {
+    if (Object.prototype.hasOwnProperty.call(this.map, name)) {
       callback.call(thisArg, this.map[name], name, this)
     }
   }
@@ -225,23 +226,24 @@ function Body() {
       semantic of setting Request.bodyUsed in the constructor before
       _initBody is called.
     */
+    // eslint-disable-next-line no-self-assign
     this.bodyUsed = this.bodyUsed
     this._bodyInit = body
     if (!body) {
       this._bodyText = ''
     } else if (typeof body === 'string') {
       this._bodyText = body
-    } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+    } else if (support.blob && Object.prototype.isPrototypeOf.call(Blob, body)) {
       this._bodyBlob = body
-    } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+    } else if (support.formData && Object.prototype.isPrototypeOf.call(FormData, body)) {
       this._bodyFormData = body
-    } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+    } else if (support.searchParams && Object.prototype.isPrototypeOf.call(URLSearchParams, body)) {
       this._bodyText = body.toString()
     } else if (support.arrayBuffer && support.blob && isDataView(body)) {
       this._bodyArrayBuffer = bufferClone(body.buffer)
       // IE 10-11 can't handle a DataView body.
       this._bodyInit = new Blob([this._bodyArrayBuffer])
-    } else if (support.arrayBuffer && (ArrayBuffer.prototype.isPrototypeOf(body) || isArrayBufferView(body))) {
+    } else if (support.arrayBuffer && (Object.prototype.isPrototypeOf.call(ArrayBuffer, body) || isArrayBufferView(body))) {
       this._bodyArrayBuffer = bufferClone(body)
     } else {
       this._bodyText = body = Object.prototype.toString.call(body)
@@ -252,7 +254,7 @@ function Body() {
         this.headers.set('content-type', 'text/plain;charset=UTF-8')
       } else if (this._bodyBlob && this._bodyBlob.type) {
         this.headers.set('content-type', this._bodyBlob.type)
-      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+      } else if (support.searchParams && Object.prototype.isPrototypeOf.call(URLSearchParams, body)) {
         this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8')
       }
     }
@@ -336,7 +338,8 @@ function normalizeMethod(method) {
   return methods.indexOf(upcased) > -1 ? upcased : method
 }
 
-export function Request(input, options) {
+// eslint-disable-next-line no-redeclare
+function Request(input, options) {
   if (!(this instanceof Request)) {
     throw new TypeError('Please use the "new" operator, this DOM object constructor cannot be called as a function.')
   }
@@ -449,7 +452,8 @@ function parseHeaders(rawHeaders) {
 
 Body.call(Request.prototype)
 
-export function Response(bodyInit, options) {
+// eslint-disable-next-line no-redeclare
+function Response(bodyInit, options) {
   if (!(this instanceof Response)) {
     throw new TypeError('Please use the "new" operator, this DOM object constructor cannot be called as a function.')
   }
@@ -493,10 +497,12 @@ Response.redirect = function(url, status) {
   return new Response(null, {status: status, headers: {location: url}})
 }
 
-export var DOMException = global.DOMException
+// eslint-disable-next-line no-redeclare
+var DOMException = global.DOMException
 try {
   new DOMException()
 } catch (err) {
+  // eslint-disable-next-line no-global-assign
   DOMException = function(message, name) {
     this.message = message
     this.name = name
@@ -507,7 +513,8 @@ try {
   DOMException.prototype.constructor = DOMException
 }
 
-export function fetch(input, init) {
+// eslint-disable-next-line no-redeclare
+function fetch(input, init) {
   return new Promise(function(resolve, reject) {
     var request = new Request(input, init)
 

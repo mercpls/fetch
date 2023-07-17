@@ -1,3 +1,4 @@
+/* eslint-env node */
 const url = require('url')
 const querystring = require('querystring')
 
@@ -121,14 +122,14 @@ const routes = {
     })
     res.end()
   },
-  '/invalid-headers': function(res) {
-    res.writeHead(200, {
-      'Content-Type': 'text/plain',
-      'Invalid Header': 'valid value',
-      'Westworld-S01': "<3"
-    })
-    res.end()
-  }
+  // '/invalid-headers': function(res) {
+  //   res.writeHead(200, {
+  //     'Content-Type': 'text/plain',
+  //     'Invalid Header': 'valid value',
+  //     'Westworld-S01': "<3"
+  //   })
+  //   res.end()
+  // }
 }
 
 module.exports = function(req, res, next) {
